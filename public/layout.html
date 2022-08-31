@@ -15,7 +15,7 @@
 body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 </style>
 </head>
-<body class="w3-content" style="max-width:1200px">
+<body class="w3-content" style="max-width:1200px ">
 
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
@@ -25,7 +25,32 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
     <p id="date"></p>
     <p id="time"></p>
   </div>
-  <a href="#footer" class="w3-bar-item w3-button w3-padding">Logout</a> 
+
+  <div style="margin-top: -20%; margin-bottom: 20%;" class="w3-padding-64 w3-large w3-text-grey" style="margin-left: 10%; font-weight:bold">
+    
+    <center>
+    <a onclick="myAccFunc1()" href="javascript:void(0)" class="w3-button w3-block w3-white " id="myBtn1">
+      สถานะของไฟ <i class="fa fa-caret-down"></i>
+    </a>
+    </center>
+    <div id="demoAcc1" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+  <pre><img id="theImage1" src="ledoff.png" width="30%" >             <button onclick="on_off_led1()" class=" w3-button"><p id="tog1">ปิด</p></button></pre>
+  <pre><img id="theImage2" src="ledoff.png" width="30%" >             <button onclick="on_off_led2()" class=" w3-button"><p id="tog2">ปิด</p></button></pre>
+  <pre><img id="theImage3" src="ledoff.png" width="30%" >             <button onclick="on_off_led3()" class=" w3-button"><p id="tog3">ปิด</p></button></pre>
+    </div>
+    <center>
+      <a onclick="myAccFunc2()" href="javascript:void(0)" class="w3-button w3-block w3-white " id="myBtn2">
+        สถานะของปลั๊ก <i class="fa fa-caret-down"></i>
+      </a>
+      </center>
+      <div id="demoAcc2" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+        <pre><img id="theImagep1" src="plugoff.png" width="30%" >             <button onclick="on_off_plug1()" class=" w3-button"><p id="togp1">ปิด</p></button></pre>
+        <pre><img id="theImagep2" src="plugoff.png" width="30%" >             <button onclick="on_off_plug2()" class=" w3-button"><p id="togp2">ปิด</p></button></pre>
+        <pre><img id="theImagep3" src="plugoff.png" width="30%" >             <button onclick="on_off_plug3()" class=" w3-button"><p id="togp3">ปิด</p></button></pre>
+      </div>
+  </div>
+
+  <a href="#footer" style="margin-bottom: 10%;" class="w3-bar-item w3-button w3-padding">Logout</a> 
   <!-- <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
   </div> -->
 </nav>
@@ -49,6 +74,9 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
   <header class="w3-container w3-xlarge">
     <p class="w3-left">EMM System</p>
   </header>
+
+
+  <div class="w3-display-container w3-container"></div>
 
   <!-- Image header -->
   
