@@ -15,7 +15,7 @@
 body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 </style>
 </head>
-<body class="w3-content" style="max-width:1200px ">
+<body class="w3-content" style="height: auto; max-width:1200px; border: solid rgba(192, 192, 192, 0.4)">
 
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
@@ -28,27 +28,38 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 
   <div style="margin-top: -20%; margin-bottom: 20%;" class="w3-padding-64 w3-large w3-text-grey" style="margin-left: 10%; font-weight:bold">
     
-    <center>
+
     <a onclick="myAccFunc1()" href="javascript:void(0)" class="w3-button w3-block w3-white " id="myBtn1">
       สถานะของไฟ <i class="fa fa-caret-down"></i>
     </a>
-    </center>
+
     <div id="demoAcc1" class="w3-bar-block w3-hide w3-padding-large w3-medium">
   <pre><img id="theImage1" src="ledoff.png" width="30%" >             <button onclick="on_off_led1()" class=" w3-button"><p id="tog1">ปิด</p></button></pre>
   <pre><img id="theImage2" src="ledoff.png" width="30%" >             <button onclick="on_off_led2()" class=" w3-button"><p id="tog2">ปิด</p></button></pre>
   <pre><img id="theImage3" src="ledoff.png" width="30%" >             <button onclick="on_off_led3()" class=" w3-button"><p id="tog3">ปิด</p></button></pre>
     </div>
-    <center>
+
       <a onclick="myAccFunc2()" href="javascript:void(0)" class="w3-button w3-block w3-white " id="myBtn2">
         สถานะของปลั๊ก <i class="fa fa-caret-down"></i>
       </a>
-      </center>
+
       <div id="demoAcc2" class="w3-bar-block w3-hide w3-padding-large w3-medium">
         <pre><img id="theImagep1" src="plugoff.png" width="30%" >             <button onclick="on_off_plug1()" class=" w3-button"><p id="togp1">ปิด</p></button></pre>
         <pre><img id="theImagep2" src="plugoff.png" width="30%" >             <button onclick="on_off_plug2()" class=" w3-button"><p id="togp2">ปิด</p></button></pre>
         <pre><img id="theImagep3" src="plugoff.png" width="30%" >             <button onclick="on_off_plug3()" class=" w3-button"><p id="togp3">ปิด</p></button></pre>
       </div>
-  </div>
+
+      <a onclick="myAccFunc3()" href="javascript:void(0)" class="w3-button w3-block w3-white " id="myBtn3">
+        สถานะของสายไฟ <i class="fa fa-caret-down"></i>
+      </a>
+    
+      <div id="demoAcc3" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+        <pre><center><b><p style="color: black;" id="togw1">ผิดปกติ</p></b></center>             <!--<button onclick="on_off_wire1()" class=" w3-button"></button>--><img id="theImagew1" src="wireoff.png" width="30%" ></pre>
+        <pre><center><b><p style="color: black;" id="togw2">ผิดปกติ</p></b></center>            <!--<button onclick="on_off_wire2()" class=" w3-button"></button> --><img id="theImagew2" src="wireoff.png" width="30%" ></pre>
+        <pre><center><b><p style="color: black;" id="togw3">ผิดปกติ</p></b></center>             <!--<button onclick="on_off_wire3()" class=" w3-button"></button>--><img id="theImagew3" src="wireoff.png" width="30%" ></pre>
+      </div>
+</div>
+</div>
 
   <a href="#footer" style="margin-bottom: 10%;" class="w3-bar-item w3-button w3-padding">Logout</a> 
   <!-- <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
@@ -72,12 +83,41 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
   
   <!-- Top header -->
   <header class="w3-container w3-xlarge">
-    <p class="w3-left">EMM System</p>
+    <br><br><br>
   </header>
+  <header class="w3-container w3-xlarge">
+    <img width="10%" height="10%" style="float: left; margin-right: 5%;" src="/public/home.png">
+    <p class="w3-left">Electrical maintenance and management system</p>
+  </header>
+  
+ <center>
+  <div style="padding-bottom: 5%;" class="w3-display-container w3-container">
+    <p><center>ห้องที่ 1</center></p>
+    <div id="square1">
+      
+      <a onclick="on_off_led1()" href="javascript:void(0)"><img style="margin-top: 3%;" id="theImage11" src="ledoff.png" width="10%" ></a>
+      <a onclick="on_off_plug1()" href="javascript:void(0)"><center><img style="margin-top: 3%; float: right; margin-top: 20%;" id="theImagep11" src="plugoff.png" width="10%" ></center></a>
+    
+    </div>
+    <p><center>ห้องที่ 2</center></p>
+    <div id="square2">
+
+      <a onclick="on_off_led2()" href="javascript:void(0)"><img style="margin-top: 3%;" id="theImage22" src="ledoff.png" width="10%" ></a>
+      <a onclick="on_off_plug2()" href="javascript:void(0)"><center><img style="margin-top: 3%; float: right; margin-top: 20%;" id="theImagep22" src="plugoff.png" width="10%" ></center></a>
+
+    </div>
+    <p><center>ห้องที่ 3</center></p>
+    <div id="square3">
+
+      <a onclick="on_off_led3()" href="javascript:void(0)"><img style="margin-top: 3%;" id="theImage33" src="ledoff.png" width="10%" ></a>
+      <a onclick="on_off_plug3()" href="javascript:void(0)"><center><img style="margin-top: 3%; float: right; margin-top: 20%;" id="theImagep33" src="plugoff.png" width="10%" ></center></a>
+
+    </div>
 
 
-  <div class="w3-display-container w3-container"></div>
-
+    
+  </div>
+</center>
   <!-- Image header -->
   
   <script type="text/javascript" src="layout.js" ></script>
