@@ -4,71 +4,636 @@
 <title>EMM System</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
+<link rel="stylesheet" href="w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="layout.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="dark-mode.css">
+<link rel="icon" type="image/png" href="house.png"/>
+    <script
+        nomodule>window.MSInputMethodContext && document.documentMode && document.write('<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-ie11@5/css/bootstrap-ie11.min.css"><script src="https://cdn.jsdelivr.net/npm/ie11-custom-properties@4/ie11CustomProperties.min.js"><\/script>');</script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-functions.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-analytics.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyCJM-ENRBlwTR5hyAqFduxJ2Xyzm82Pud0",
+        authDomain: "esm-system.firebaseapp.com",
+        databaseURL: "https://esm-system-default-rtdb.firebaseio.com",
+        projectId: "esm-system",
+        storageBucket: "esm-system.appspot.com",
+        messagingSenderId: "601934263236",
+        appId: "1:601934263236:web:cb0490398c1a0c3432ea91",
+        measurementId: "G-WZLEMCTJ9E"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    </script>
+
+    <script type="text/javascript">
+      initApp = function() {
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+             // User is signed in.
+             var email = user.email;
+             var uid = user.uid;
+             // Check an authorized user.
+             var sub8 = uid.substring(0, 8); 
+             var domain = email.substr(email.search("@")+1);
+             if ((sub8 == "ldqR9XCA") || (domain == "t" )) {
+
+
+               // Start check new user.
+        
+               firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control/LED1")
+               firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control/PLUG1")
+               
+                .once("value", snapshot => {
+                  if (snapshot.exists()){
+                    console.log("exists!");
+                  } else {
+                    var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control");
+                    
+                    // The config object we want to write(create).
+                    var dbRefp = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control");
+                    var set = {
+                      PLUG1: 0,
+                      PLUG2: 0,
+                      PLUG3: 0,
+                    }
+                    dbRefp
+                     .set(set)
+                     .then(function() {
+                       console.log('Success!');
+                     })
+                      .catch(function(error) {
+                       console.log('Error: ' + error.message);
+                     });
+                    var config = {
+                      LED1: 0,
+                      LED2: 0,
+                      LED3: 0,
+                      
+                    };
+                    // Write the config to the database. 
+                    dbRef
+                     .set(config)
+                     .then(function() {
+                       console.log('Success!');
+                     })
+                      .catch(function(error) {
+                       console.log('Error: ' + error.message);
+                     });
+                  }
+               });
+               // End check new user.
+            } else {
+               alert("You are not authorized to this page.");
+               firebase.auth().signOut();
+               window.location.replace("index.html");
+             }
+          } else {
+            // User is signed out.
+            window.location.replace("index.html");
+          }
+        }, function(error) {
+          console.log(error);
+        });
+      };
+
+      window.addEventListener('load', function() {
+        initApp()
+      });
+    </script>
+
+    <script>
+    function setledSignout() {
+       firebase.auth().signOut();
+       // User is signed out.
+       window.location.replace("index.html");
+    }
+    </script>
+
+    <script>
+    // function setledonUser() {
+    // firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control/LED1")
+    //   .once("value", snapshot => {
+    //   if (snapshot.exists()){
+    //     console.log("exists!");
+    //     // Get a reference to the Firebase database entry at the given key.
+    //     var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control");
+    //     // The config object we want to write.
+    //     var config = {
+    //       LED1: 1,
+    //       LED2: 1,
+    //     };
+    //     // Write the config to the database.
+    //     dbRef
+    //       .update(config)
+    //       .then(function() {
+    //         console.log('Success!');
+    //         document.getElementById("printled").innerHTML = "LED1=" + config.LED1 + " , LED2=" + config.LED2;
+    //         document.getElementById("showled").innerHTML = "<img src='ledon.jpg' />" + "   " + "<img src='ledon.jpg' />" ;
+    //       })
+    //       .catch(function(error) {
+    //         console.log('Error: ' + error.message);
+    //       });
+    //   } else {
+    //      alert("Something wrong when connect database.");
+    //   }
+    // });
+    // }
+
+    // function setledoffUser() {
+    // firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control/LED1")
+    //   .once("value", snapshot => {
+    //   if (snapshot.exists()){
+    //     console.log("exists!");
+    //     // Get a reference to the Firebase database entry at the given key.
+    //     var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control");
+    //     // The config object we want to write.
+    //     var config = {
+    //       LED1: 0,
+    //       LED2: 0,
+    //     };
+    //     // Write the config to the database.
+    //     dbRef
+    //       .update(config)
+    //       .then(function() {
+    //         console.log('Success!');
+    //         document.getElementById("printled").innerHTML = "LED1=" + config.LED1 + " , LED2=" + config.LED2;
+    //         document.getElementById("showled").innerHTML = "<img src='ledoff.jpg' />" + "   " + "<img src='ledoff.jpg' />" ;
+    //       })
+    //       .catch(function(error) {
+    //         console.log('Error: ' + error.message);
+    //       });
+    //   } else {
+    //      alert("Something wrong when connect database.");
+    //   }
+    // });
+    // }
+    function on_off_led1() {
+  var x = document.getElementById("tog1");
+  
+  if (x.innerHTML === "ปิด") {
+    x.innerHTML = "เปิด";
+    document.getElementById("theImage1").src = "ledon.png"
+    document.getElementById("theImage11").src = "ledon2.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control/LED1")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control");
+        // The config object we want to write.
+        var config = {
+          LED1: 1,
+        };
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+            // document.getElementById("printled").innerHTML = "LED1=" + config.LED1 + " , LED2=" + config.LED2;
+            // document.getElementById("showled").innerHTML = "<img src='ledon.jpg' />" + "   " + "<img src='ledon.jpg' />" ;
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+  } else {
+    x.innerHTML = "ปิด";
+    document.getElementById("theImage1").src = "ledoff.png"
+    document.getElementById("theImage11").src = "ledoff2.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control/LED1")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control");
+        // The config object we want to write.
+        var config = {
+          LED1: 0,
+        };
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+            // document.getElementById("printled").innerHTML = "LED1=" + config.LED1 + " , LED2=" + config.LED2;
+            // document.getElementById("showled").innerHTML = "<img src='ledoff.jpg' />" + "   " + "<img src='ledoff.jpg' />" ;
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+  }
+}
+function on_off_led2() {
+  var x = document.getElementById("tog2");
+  
+
+  if (x.innerHTML === "ปิด") {
+    x.innerHTML = "เปิด";
+    document.getElementById("theImage2").src = "ledon.png"
+    document.getElementById("theImage22").src = "ledon2.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control/LED2")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control");
+        // The config object we want to write.
+        var config = {
+          LED2: 1,
+        };
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+            // document.getElementById("printled").innerHTML = "LED1=" + config.LED1 + " , LED2=" + config.LED2;
+            // document.getElementById("showled").innerHTML = "<img src='ledoff.jpg' />" + "   " + "<img src='ledoff.jpg' />" ;
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+  } else {
+    x.innerHTML = "ปิด";
+    document.getElementById("theImage2").src = "ledoff.png"
+    document.getElementById("theImage22").src = "ledoff2.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control/LED2")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control");
+        // The config object we want to write.
+        var config = {
+          LED2: 0,
+        };
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+            // document.getElementById("printled").innerHTML = "LED1=" + config.LED1 + " , LED2=" + config.LED2;
+            // document.getElementById("showled").innerHTML = "<img src='ledoff.jpg' />" + "   " + "<img src='ledoff.jpg' />" ;
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+  }
+  
+}
+
+function on_off_led3() {
+  var x = document.getElementById("tog3");
+  if (x.innerHTML === "ปิด") {
+    x.innerHTML = "เปิด";
+    document.getElementById("theImage3").src = "ledon.png"
+    document.getElementById("theImage33").src = "ledon2.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control/LED3")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control");
+        // The config object we want to write.
+        var config = {
+          LED3: 1,
+        };
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+            // document.getElementById("printled").innerHTML = "LED1=" + config.LED1 + " , LED2=" + config.LED2;
+            // document.getElementById("showled").innerHTML = "<img src='ledoff.jpg' />" + "   " + "<img src='ledoff.jpg' />" ;
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+  } else {
+    x.innerHTML = "ปิด";
+    document.getElementById("theImage3").src = "ledoff.png"
+    document.getElementById("theImage33").src = "ledoff2.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control/LED3")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/led_control");
+        // The config object we want to write.
+        var config = {
+          LED3: 0,
+        };
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+            // document.getElementById("printled").innerHTML = "LED1=" + config.LED1 + " , LED2=" + config.LED2;
+            // document.getElementById("showled").innerHTML = "<img src='ledoff.jpg' />" + "   " + "<img src='ledoff.jpg' />" ;
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+  }
+}
+
+  function on_off_plug1() {
+  var x = document.getElementById("togp1");
+  if (x.innerHTML === "ปิด") {
+    x.innerHTML = "เปิด";
+    document.getElementById("theImagep1").src = "plugon.png"
+    document.getElementById("theImagep11").src = "plugon.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control/PLUG1")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control");
+                    // The config object we want to write(create).
+                    var config = {
+                      PLUG1: 1,
+                    }
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+  } else {
+    x.innerHTML = "ปิด";
+    document.getElementById("theImagep1").src = "plugoff.png"
+    document.getElementById("theImagep11").src = "plugoff2.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control/PLUG1")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control");
+                    // The config object we want to write(create).
+                    var config = {
+                      PLUG1: 0,
+                    }
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+  }
+}   
+function on_off_plug2() {
+  var x = document.getElementById("togp2");
+  
+
+  if (x.innerHTML === "ปิด") {
+    x.innerHTML = "เปิด";
+    document.getElementById("theImagep2").src = "plugon.png"
+    document.getElementById("theImagep22").src = "plugon.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control/PLUG2")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control");
+                    // The config object we want to write(create).
+                    var config = {
+                      PLUG2: 1,
+                    }
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+  } else {
+    x.innerHTML = "ปิด";
+    document.getElementById("theImagep2").src = "plugoff.png"
+    document.getElementById("theImagep22").src = "plugoff2.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control/PLUG2")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control");
+                    // The config object we want to write(create).
+                    var config = {
+                      PLUG2: 0,
+                    }
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+
+  }
+}
+
+function on_off_plug3() {
+  var x = document.getElementById("togp3");
+  
+
+  if (x.innerHTML === "ปิด") {
+    x.innerHTML = "เปิด";
+    document.getElementById("theImagep3").src = "plugon.png"
+    document.getElementById("theImagep33").src = "plugon.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control/PLUG3")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control");
+                    // The config object we want to write(create).
+                    var config = {
+                      PLUG3: 1,
+                    }
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+  } else {
+    x.innerHTML = "ปิด";
+    document.getElementById("theImagep3").src = "plugoff.png"
+    document.getElementById("theImagep33").src = "plugoff2.png"
+    firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control/PLUG3")
+      .once("value", snapshot => {
+      if (snapshot.exists()){
+        console.log("exists!");
+        // Get a reference to the Firebase database entry at the given key.
+        var dbRef = firebase.database().ref("device/" + firebase.auth().currentUser.uid + "/plug_control");
+                    // The config object we want to write(create).
+                    var config = {
+                      PLUG3: 0,
+                    }
+        // Write the config to the database.
+        dbRef
+          .update(config)
+          .then(function() {
+            console.log('Success!');
+          })
+          .catch(function(error) {
+            console.log('Error: ' + error.message);
+          });
+      } else {
+         alert("Something wrong when connect database.");
+      }
+    });
+  }
+}
+
+  
+
+    </script>
 
 <style>
 .w3-sidebar a {font-family: "Roboto", sans-serif}
 body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
 </style>
 </head>
-<body class="w3-content" style="height: auto; max-width:1200px; border: solid rgba(192, 192, 192, 0.4)">
+<body class="w3-content" style="height: auto; max-width:1200px; border: solid rgba(192, 192, 192, 0.4); background-color: #f5f5f5;">
+
+  <div id="message"></div>
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-bar-block w3-white w3-collapse w3-top" style="z-index:3;width:250px" id="mySidebar">
-  <div class="w3-container w3-display-container w3-padding-16">
+<nav class="w3-sidebar w3-bar-block  w3-collapse w3-top" style="z-index:3;width:260px; background-color: #464646;" id="mySidebar">
+  <div style="background-color: #464646;" class="w3-container w3-display-container w3-padding-16">
     <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>
-    <h3 class="w3-wide"><center><img width="40%" height="40%" src="/public/home.png"></center></h3>
+    <h3 class="w3-wide"><center><img width="40%" height="40%" src="home.png"></center></h3>
     <p id="date"></p>
     <p id="time"></p>
+    <center>
+      <div class="form-check form-switch w3-text-white">
+        <input style="margin-left: 3%;" type="checkbox" class="form-check-input" id="darkSwitch">
+        <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
+      </div>
+    </center>
+      <script src="dark-mode-switch.min.js"></script>
   </div>
 
-  <div style="margin-top: -20%; margin-bottom: 20%;" class="w3-padding-64 w3-large w3-text-grey" style="margin-left: 10%; font-weight:bold">
+  <div style="margin-top: -20%; margin-bottom: 20%; background-color: #464646;" class="w3-padding-64 w3-large w3-text-white" style="margin-left: 10%; font-weight:bold">
     
 
-    <a onclick="myAccFunc1()" href="javascript:void(0)" class="w3-button w3-block w3-white " id="myBtn1">
+    <a onclick="myAccFunc1()" href="javascript:void(0)"  class="w3-button w3-block " id="myBtn1">
       สถานะของไฟ <i class="fa fa-caret-down"></i>
     </a>
 
-    <div id="demoAcc1" class="w3-bar-block w3-hide w3-padding-large w3-medium">
-  <pre><img id="theImage1" src="ledoff.png" width="30%" >             <button onclick="on_off_led1()" class=" w3-button"><p id="tog1">ปิด</p></button></pre>
-  <pre><img id="theImage2" src="ledoff.png" width="30%" >             <button onclick="on_off_led2()" class=" w3-button"><p id="tog2">ปิด</p></button></pre>
-  <pre><img id="theImage3" src="ledoff.png" width="30%" >             <button onclick="on_off_led3()" class=" w3-button"><p id="tog3">ปิด</p></button></pre>
-    </div>
 
-      <a onclick="myAccFunc2()" href="javascript:void(0)" class="w3-button w3-block w3-white " id="myBtn2">
+    <div id="demoAcc1" class="w3-bar-block w3-hide w3-padding-large w3-medium">
+  <pre><img id="theImage1" src="ledoff.png" width="30%" >           <button onclick="on_off_led1()" class=" w3-button"><p style="color: #EEE;" id="tog1">ปิด</p></button></pre>
+  <pre><img id="theImage2" src="ledoff.png" width="30%" >           <button onclick="on_off_led2()" class=" w3-button"><p style="color: #EEE;" id="tog2">ปิด</p></button></pre>
+  <pre><img id="theImage3" src="ledoff.png" width="30%" >           <button onclick="on_off_led3()" class=" w3-button"><p style="color: #EEE;" id="tog3">ปิด</p></button></pre>
+    </div>
+  
+      <a onclick="myAccFunc2()" href="javascript:void(0)" class="w3-button w3-block  " id="myBtn2">
         สถานะของปลั๊ก <i class="fa fa-caret-down"></i>
       </a>
 
       <div id="demoAcc2" class="w3-bar-block w3-hide w3-padding-large w3-medium">
-        <pre><img id="theImagep1" src="plugoff.png" width="30%" >             <button onclick="on_off_plug1()" class=" w3-button"><p id="togp1">ปิด</p></button></pre>
-        <pre><img id="theImagep2" src="plugoff.png" width="30%" >             <button onclick="on_off_plug2()" class=" w3-button"><p id="togp2">ปิด</p></button></pre>
-        <pre><img id="theImagep3" src="plugoff.png" width="30%" >             <button onclick="on_off_plug3()" class=" w3-button"><p id="togp3">ปิด</p></button></pre>
+        <pre><img id="theImagep1" src="plugoff.png" width="30%" >          <button onclick="on_off_plug1()" class=" w3-button"><p style="color: #EEE;" id="togp1">ปิด</p></button></pre>
+        <pre><img id="theImagep2" src="plugoff.png" width="30%" >          <button onclick="on_off_plug2()" class=" w3-button"><p style="color: #EEE;" id="togp2">ปิด</p></button></pre>
+        <pre><img id="theImagep3" src="plugoff.png" width="30%" >          <button onclick="on_off_plug3()" class=" w3-button"><p style="color: #EEE;" id="togp3">ปิด</p></button></pre>
       </div>
 
-      <a onclick="myAccFunc3()" href="javascript:void(0)" class="w3-button w3-block w3-white " id="myBtn3">
+      <a onclick="myAccFunc3()" href="javascript:void(0)" class="w3-button w3-block " id="myBtn3">
         สถานะของสายไฟ <i class="fa fa-caret-down"></i>
       </a>
     
       <div id="demoAcc3" class="w3-bar-block w3-hide w3-padding-large w3-medium">
-        <pre><center><b><p style="color: black;" id="togw1">ผิดปกติ</p></b></center>             <!--<button onclick="on_off_wire1()" class=" w3-button"></button>--><img id="theImagew1" src="wireoff.png" width="30%" ></pre>
-        <pre><center><b><p style="color: black;" id="togw2">ผิดปกติ</p></b></center>            <!--<button onclick="on_off_wire2()" class=" w3-button"></button> --><img id="theImagew2" src="wireoff.png" width="30%" ></pre>
-        <pre><center><b><p style="color: black;" id="togw3">ผิดปกติ</p></b></center>             <!--<button onclick="on_off_wire3()" class=" w3-button"></button>--><img id="theImagew3" src="wireoff.png" width="30%" ></pre>
+        <pre><b><center><p style="color: #EEE;" style="color: black;" id="togw1">ผิดปกติ</p></center></b>         <!--<button onclick="on_off_wire1()" class=" w3-button"></button>--><img id="theImagew1" src="wireoff.png" width="30%" ></pre>
+        <pre><b><center><p style="color: #EEE;" style="color: black;" id="togw2">ผิดปกติ</p></center></b>         <!--<button onclick="on_off_wire2()" class=" w3-button"></button> --><img id="theImagew2" src="wireoff.png" width="30%" ></pre>
+        <pre><b><center><p style="color: #EEE;" style="color: black;" id="togw3">ผิดปกติ</p></center></b>         <!--<button onclick="on_off_wire3()" class=" w3-button"></button>--><img id="theImagew3" src="wireoff.png" width="30%" ></pre>
       </div>
+      
+      
+      
 </div>
 </div>
 
-  <a href="#footer" style="margin-bottom: 10%;" class="w3-bar-item w3-button w3-padding">Logout</a> 
+  <button onclick="setledSignout();" style="margin-bottom: 10%;" class="w3-bar-item w3-button w3-padding w3-text-white">Logout </button>
   <!-- <div class="w3-padding-64 w3-large w3-text-grey" style="font-weight:bold">
   </div> -->
 </nav>
 
 <!-- Top menu on small screens -->
 <header class="w3-bar w3-top w3-hide-large w3-black w3-xlarge">
-  <div class="w3-bar-item w3-padding-24 w3-wide"><img width="10%" height="10%"  src="/public/home.png"></div>
+  
+  <div class="w3-bar-item w3-padding-24 w3-wide"><img width="10%" height="10%"  src="home.png"></div>
   <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding-24 w3-right" onclick="w3_open()"><i class="fa fa-bars"></i></a>
 </header>
 
@@ -86,7 +651,7 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
     <br><br><br>
   </header>
   <header class="w3-container w3-xlarge">
-    <img width="10%" height="10%" style="float: left; margin-right: 5%;" src="/public/home.png">
+    <img width="10%" height="10%" style="float: left; margin-right: 5%;" src="home.png">
     <p class="w3-left">Electrical maintenance and management system</p>
   </header>
   
@@ -95,23 +660,22 @@ body,h1,h2,h3,h4,h5,h6,.w3-wide {font-family: "Montserrat", sans-serif;}
     <p><center>ห้องที่ 1</center></p>
     <div id="square1">
       
-      <a onclick="on_off_led1()" href="javascript:void(0)"><img style="margin-top: 3%;" id="theImage11" src="ledoff.png" width="10%" ></a>
-      <a onclick="on_off_plug1()" href="javascript:void(0)"><center><img style="margin-top: 3%; float: right; margin-top: 20%;" id="theImagep11" src="plugoff.png" width="10%" ></center></a>
+      <a onclick="on_off_led1()" href="javascript:void(0)"><img style="margin-top: 3%;" id="theImage11" src="ledoff2.png" width="10%" ></a>
+      <a onclick="on_off_plug1()" href="javascript:void(0)"><center><img style="margin-top: 3%; float: right; margin-top: 20%;" id="theImagep11" src="plugoff2.png" width="10%" ></center></a>
     
     </div>
     <p><center>ห้องที่ 2</center></p>
     <div id="square2">
 
-      <a onclick="on_off_led2()" href="javascript:void(0)"><img style="margin-top: 3%;" id="theImage22" src="ledoff.png" width="10%" ></a>
-      <a onclick="on_off_plug2()" href="javascript:void(0)"><center><img style="margin-top: 3%; float: right; margin-top: 20%;" id="theImagep22" src="plugoff.png" width="10%" ></center></a>
+      <a onclick="on_off_led2()" href="javascript:void(0)"><img style="margin-top: 3%;" id="theImage22" src="ledoff2.png" width="10%" ></a>
+      <a onclick="on_off_plug2()" href="javascript:void(0)"><center><img style="margin-top: 3%; float: right; margin-top: 20%;" id="theImagep22" src="plugoff2.png" width="10%" ></center></a>
 
     </div>
     <p><center>ห้องที่ 3</center></p>
     <div id="square3">
 
-      <a onclick="on_off_led3()" href="javascript:void(0)"><img style="margin-top: 3%;" id="theImage33" src="ledoff.png" width="10%" ></a>
-      <a onclick="on_off_plug3()" href="javascript:void(0)"><center><img style="margin-top: 3%; float: right; margin-top: 20%;" id="theImagep33" src="plugoff.png" width="10%" ></center></a>
-
+      <a onclick="on_off_led3()" href="javascript:void(0)"><img style="margin-top: 3%;" id="theImage33" src="ledoff2.png" width="10%" ></a>
+      <a onclick="on_off_plug3()" href="javascript:void(0)"><center><img style="margin-top: 3%; float: right; margin-top: 20%;" id="theImagep33" src="plugoff2.png" width="10%" ></center></a>
     </div>
 
 

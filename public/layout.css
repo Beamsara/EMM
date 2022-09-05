@@ -35,14 +35,14 @@ body {
 }
 
 #date {
-  color: rgb(0, 0, 0);
+  color: #eee;
   text-align: center;
   font-size: 100%;
   
 }
 
 #time {
-  color: rgb(0, 0, 0);
+  color: #eee;
   text-align: center;
   font-size: 100%;
   
@@ -83,7 +83,7 @@ li a:hover:not(.active) {
   
   height: 340px; 
   
-  background: rgba(252, 222, 222, 0.505); 
+  background: rgb(252, 222, 222); 
 
   border: solid black;
 
@@ -98,7 +98,7 @@ li a:hover:not(.active) {
   
   height: 340px; 
   
-  background: rgba(252, 222, 222, 0.505); 
+  background: rgb(252, 222, 222); 
 
   border: solid black;
 
@@ -114,7 +114,7 @@ li a:hover:not(.active) {
     
     height: 340px; 
     
-    background: rgba(252, 222, 222, 0.505); 
+    background: rgb(252, 222, 222); 
   
     border: solid black;
 
